@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -48,6 +49,17 @@ public class Utils {
   }
 
   public static PossibleLogImporters detectPossibleLogImporter(Collection<LogImporter> importers, byte[] buff) {
+	  String logImporterSys = System.getProperty("logimporter");
+	  if (logImporterSys != null) {
+		  Collection<LogImporter> importersNew = new ArrayList<LogImporter>();
+		  for (LogImporter logImporter : importers) {
+			  if (logImporter.getName().equalsIgnoreCase(logImporterSys)) {
+				  importersNew.add(logImporter);
+			  }
+			  
+		  }
+		  importers = importersNew;
+	  }
     PossibleLogImporters possibleLogImporters = new PossibleLogImporters();
     int messageImported = 0;
     for (LogImporter logImporter : importers) {
